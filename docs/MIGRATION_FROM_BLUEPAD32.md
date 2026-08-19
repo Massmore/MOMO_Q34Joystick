@@ -1,8 +1,6 @@
-# ย้ายจากโค้ด Bluepad32 เดิมมาที่ MomoJoy
+# ย้ายจาก Bluepad32 มาที่ MomoJoy
 
-> English → [../en/MIGRATION_FROM_BLUEPAD32.md](../en/MIGRATION_FROM_BLUEPAD32.md)
-
-ช่วงค่าเหมือนกันทุกอย่าง (แกน −512..511, ไก 0..1023) จึงเปลี่ยนแค่ชื่อฟังก์ชัน
+ช่วงค่าเหมือนกันทุกอย่าง (stick −512..511, trigger 0..1023) จึงเปลี่ยนแค่ชื่อ accessor เท่านั้น
 
 ## โครงหลัก
 
@@ -31,10 +29,10 @@
  }
 ```
 
-## ตารางเทียบ
+## ตารางเทียบ accessor
 
 | Bluepad32 | MomoJoy |
-|---|---|
+| --- | --- |
 | `ctl->a()` | `MomoJoy.pressed(MOMO_BTN_A)` |
 | `ctl->b()` | `MomoJoy.pressed(MOMO_BTN_B)` |
 | `ctl->x()` | `MomoJoy.pressed(MOMO_BTN_X)` |
@@ -42,8 +40,8 @@
 | `ctl->l1()` / `r1()` | `MomoJoy.pressed(MOMO_BTN_L1 / MOMO_BTN_R1)` |
 | `ctl->thumbL()` / `thumbR()` | `MomoJoy.pressed(MOMO_BTN_L3 / MOMO_BTN_R3)` |
 | `ctl->brake()` / `throttle()` | `MomoJoy.l2()` / `MomoJoy.r2()` |
-| `ctl->axisX() axisY()` | `MomoJoy.lx()` `MomoJoy.ly()` |
-| `ctl->axisRX() axisRY()` | `MomoJoy.rx()` `MomoJoy.ry()` |
+| `ctl->axisX()` `axisY()` | `MomoJoy.lx()` `MomoJoy.ly()` |
+| `ctl->axisRX()` `axisRY()` | `MomoJoy.rx()` `MomoJoy.ry()` |
 | `ctl->dpad() == 0x01` (บน) | `MomoJoy.dpadUp()` |
 | `ctl->dpad() == 0x02` (ล่าง) | `MomoJoy.dpadDown()` |
 | `ctl->dpad() == 0x04` (ขวา) | `MomoJoy.dpadRight()` |
@@ -57,17 +55,23 @@
 
 ## ข้อดีที่ได้เพิ่ม
 
-- **edge detection ในตัว** — ไม่ต้องเก็บ `lastState` เอง:
+- **edge detection มาในตัว** — ไม่ต้องเก็บ `lastState` เอง ใช้
   `MomoJoy.justPressed(MOMO_BTN_A)` แทน `if (a() && !lastA)`
 - **ไม่ต้องใช้ board platform พิเศษ** — Bluepad32 ต้องใช้ `platform = ...bluepad32...`
-  ซึ่งผูกกับ Arduino core เวอร์ชันที่เขาแพตช์ไว้ MomoJoy ใช้ Arduino core มาตรฐาน
-- **แก้เองได้ทั้งหมด** — mapping ปุ่มอยู่ในตารางเดียวใน `MomoMapper.cpp`
+  ที่ผูกกับ Arduino core เวอร์ชันที่เขา patch ไว้ ส่วน MomoJoy ใช้ platform `espressif32`
+  มาตรฐาน
+- **แก้เองได้ทั้งหมด** — button mapping อยู่ในตารางเดียวใน `MomoMapper.cpp` และตัว
+  descriptor parser ก็มี unit test ให้ต่อยอดได้
 
-## ข้อจำกัดที่ต้องรู้
+## ข้อจำกัดที่ต้องรู้ก่อนย้าย
 
 | | Bluepad32 | MomoJoy |
-|---|---|---|
-| จอยพร้อมกัน | สูงสุด 4 | 1 (ตั้งใจให้เบา) |
-| Bluetooth Classic (PS3/PS4/Xbox แบบ BR/EDR) | รองรับ | ❌ BLE อย่างเดียว (ESP32-S3 ไม่มี BT Classic) |
-| สั่น / ไฟ LED บนจอย | รองรับบางรุ่น | ยังไม่รองรับ (HID Output Report ยังไม่ได้ทำ) |
-| จอย BLE HID ทั่วไป | รองรับ | รองรับ (parse descriptor เอง) |
+| --- | --- | --- |
+| จอยพร้อมกัน | สูงสุด 4 ตัว | 1 ตัว (ตั้งใจให้เบา) |
+| Bluetooth Classic (PS3/PS4/Xbox แบบ BR/EDR) | รองรับ | ❌ BLE เท่านั้น (ESP32-S3 ไม่มี BT Classic) |
+| rumble / LED บนจอย | รองรับบางรุ่น | ยังไม่รองรับ (ยังไม่ได้ทำ HID output report) |
+| จอย BLE HID ทั่วไป | รองรับ | รองรับ (parse descriptor ตอน runtime) |
+
+## อ่านต่อ
+
+[API.md](API.md) · [CALIBRATION.md](CALIBRATION.md)
