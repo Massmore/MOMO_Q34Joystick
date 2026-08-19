@@ -1,0 +1,30 @@
+{
+  "name": "MomoJoy",
+  "version": "1.0.0",
+  "description": "BLE HID gamepad host for ESP32-S3 on the Arduino core. Scans, bonds, parses the HID Report Map at runtime and decodes any BLE gamepad into a normalised state. Tuned for the ShanWan Q34U in Mode D (Android / BLE HID).",
+  "keywords": "ble, hid, host, gamepad, joystick, esp32, esp32-s3, shanwan, q34u, nimble, robot",
+  "authors": [
+    {
+      "name": "Wooddy",
+      "maintainer": true
+    }
+  ],
+  "license": "MIT",
+  "frameworks": "arduino",
+  "platforms": "espressif32",
+  "headers": "MomoJoy.h",
+  "dependencies": [
+    {
+      "owner": "h2zero",
+      "name": "NimBLE-Arduino",
+      "version": "^1.4.3"
+    }
+  ],
+  "build": {
+    "srcDir": "src",
+    "flags": [
+      "-I src",
+      "-I src/core"
+    ]
+  }
+}
